@@ -1,9 +1,9 @@
 
-# Proxmox Auto-Update Script  
+# 💻 Proxmox Auto-Update Script  
 **Version:** 1.4.0-intelligent  
 **Author:** Wojciech Piwowarski  
 
-## Instrukcja instalacji
+## 📦 Instrukcja instalacji
 
 ### 1. Rozpakuj paczkę:
 ```bash
@@ -16,7 +16,20 @@ Znajdź i edytuj zmienną `EMAIL`, która odpowiada za adres adresata:
 EMAIL="twoj_adres@email.com"
 ```
 
-### 3. Ustaw uprawnienia:
+### 3. Zawartość archiwum po rozpakowaniu:
+
+Przenieś zawartość folderu `usr`:
+```bash
+mv proxmox-auto-update/usr/ /usr/
+```
+
+Przenieś zawartość folderu `etc`:
+
+```bash
+mv proxmox-auto-update/etc/ /etc/
+```
+
+🔒 Uprawnienia:
 ```bash
 chmod +x /usr/local/bin/proxmox-auto-update.sh
 ```
@@ -59,21 +72,22 @@ systemctl list-timers --all
 apt install msmtp msmtp-mta -y
 ```
 
-#### Plik konfiguracyjny:
+#### 📄 Plik konfiguracyjny:
 - `~/.msmtprc` (dla użytkownika)
 - `/etc/msmtprc` (globalnie)
+>💡 szablon pliku konfiguracyjnego znajduje się w paczce.
 
-#### Uprawnienia:
+#### 🔒 Uprawnienia:
 ```bash
 chmod 600 ~/.msmtprc
 ```
 
-#### Test wysyłki:
+#### 🧪 Test wysyłki:
 ```bash
 echo "To: twoj_email@gmail.com" | msmtp --debug --from=default -t
 ```
 
-#### 🔐 Zabezpieczenie hasła:
+#### 🚀 * Opcjonalnie * 🔐 Zabezpieczenie hasła:
 Zaszyfruj hasło GPG:
 ```bash
 echo "twoje_haslo" | gpg --encrypt --recipient email@email.com > ~/.msmtp-password.gpg
@@ -84,11 +98,11 @@ W pliku `.msmtprc` dodaj:
 passwordeval "gpg --quiet --for-your-eyes-only --no-tty --decrypt ~/.msmtp-password.gpg"
 ```
 
-Uprawnienia:
+🔒 Uprawnienia:
 ```bash
 chmod 600 ~/.msmtp-password.gpg
 ```
 
 ---
-
+## 💡
 📂 **Logi znajdziesz w:** `/var/log/proxmox-auto-update.log`
