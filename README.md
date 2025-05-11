@@ -1,7 +1,7 @@
 
-# 💻 Proxmox Auto-Update Script  
-**Version:** 1.4.0-intelligent  
-**Author:** Wojciech Piwowarski  
+# 🖥️ Proxmox Auto-Update Script  
+**Version:** 1.4.0-intelligent
+**Author:** Wojciech Piwowarski
 
 ## 📦 Instrukcja instalacji
 
@@ -11,19 +11,19 @@ tar -xvzf proxmox-auto-update.tar.gz -C /
 ```
 
 ### 2. Edytuj plik `/usr/local/bin/proxmox-auto-update.sh` i ustaw swój adres e-mail:
-Znajdź i edytuj zmienną `EMAIL`, która odpowiada za adres adresata:
+🧑‍🔧 Znajdź i edytuj zmienną `EMAIL`, która odpowiada za adres adresata:
 ```bash
 EMAIL="twoj_adres@email.com"
 ```
 
 ### 3. Zawartość archiwum po rozpakowaniu:
 
-Przenieś zawartość folderu `usr`:
+🧑‍🔧 Przenieś zawartość folderu `usr`:
 ```bash
 mv proxmox-auto-update/usr/ /usr/
 ```
 
-Przenieś zawartość folderu `etc`:
+🧑‍🔧 Przenieś zawartość folderu `etc`:
 
 ```bash
 mv proxmox-auto-update/etc/ /etc/
@@ -38,20 +38,20 @@ chmod +x /usr/local/bin/proxmox-auto-update.sh
 ```bash
 systemctl daemon-reload
 ```
-> Przeładowuje konfigurację jednostek systemd (usługi, timery, itd.).
+> ⬆️ Przeładowuje konfigurację jednostek systemd (🔧 usługi, ⏲️ timery, 🧩 itd.).
 
 ### 5. Włącz timer:
-Aby uruchomić timer od razu i aktywować go na stałe:
+⏲️ Aby uruchomić timer od razu i aktywować go na stałe:
 ```bash
 systemctl enable --now proxmox-auto-update.timer
 ```
 
-Aby tylko aktywować timer (uruchomi się przy następnym reboot):
+⏲️ Aby tylko aktywować timer ( 🚨 uruchomi się przy następnym reboot):
 ```bash
 systemctl enable proxmox-auto-update.timer
 ```
 
-Aby uruchomić timer tylko raz (do kolejnego rebootu):
+⏲️ Aby uruchomić timer tylko raz ( 🚨 do kolejnego rebootu):
 ```bash
 systemctl start proxmox-auto-update.timer
 ```
@@ -62,7 +62,7 @@ systemctl status proxmox-auto-update.timer
 ```
 ### 7. Sprawdź czy timer jest dodany:
 
-Komenda ta wyświetli wszystkie aktywne timery w systemie, w tym twój timer `proxmox-auto-update.timer`.:
+⏲️ Komenda ta wyświetli wszystkie aktywne timery w systemie, w tym twój timer `proxmox-auto-update.timer`.:
 ```bash
 systemctl list-timers --all
 ```
@@ -87,13 +87,13 @@ chmod 600 ~/.msmtprc
 echo "To: twoj_email@gmail.com" | msmtp --debug --from=default -t
 ```
 
-#### 🚀 * Opcjonalnie * 🔐 Zabezpieczenie hasła:
-Zaszyfruj hasło GPG:
+#### 📌 * Opcjonalnie * 🔐 Zabezpieczenie hasła:
+🛡️ Zaszyfruj hasło GPG:
 ```bash
 echo "twoje_haslo" | gpg --encrypt --recipient email@email.com > ~/.msmtp-password.gpg
 ```
 
-W pliku `.msmtprc` dodaj:
+🧑‍🔧 W pliku `.msmtprc` dodaj:
 ```bash
 passwordeval "gpg --quiet --for-your-eyes-only --no-tty --decrypt ~/.msmtp-password.gpg"
 ```
@@ -104,5 +104,5 @@ chmod 600 ~/.msmtp-password.gpg
 ```
 
 ---
-## 💡
+### 💡
 📂 **Logi znajdziesz w:** `/var/log/proxmox-auto-update.log`
