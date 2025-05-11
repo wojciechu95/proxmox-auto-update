@@ -1,108 +1,147 @@
+# 🖥️ Przewodnik instalacji
 
-# 🖥️ Proxmox Auto-Update Script  
-**Version:** 1.4.0-intelligent
-**Author:** Wojciech Piwowarski
+# Proxmox Auto-Update Script
 
-## 📦 Instrukcja instalacji
+**Wersja:** 1.4.0-intelligent
+**Autor:** Wojciech Piwowarski
+
+## 📦 Instalacja krok po kroku
+
+---
 
 ### 1. Rozpakuj paczkę:
+
 ```bash
 tar -xvzf proxmox-auto-update.tar.gz -C /
 ```
 
-### 2. Edytuj plik `/usr/local/bin/proxmox-auto-update.sh` i ustaw swój adres e-mail:
-🧑‍🔧 Znajdź i edytuj zmienną `EMAIL`, która odpowiada za adres adresata:
+> 📁 Jeśli pliki wypakują się do katalogu `proxmox-auto-update/`, przenieś je odpowiednio:
+
+```bash
+mv proxmox-auto-update/usr/ /usr/
+mv proxmox-auto-update/etc/ /etc/
+```
+
+### 2. Skonfiguruj adres e-mail:
+
+🧑‍🔧 Edytuj plik `/usr/local/bin/proxmox-auto-update.sh` i ustaw zmienną `EMAIL`:
+
 ```bash
 EMAIL="twoj_adres@email.com"
 ```
 
-### 3. Zawartość archiwum po rozpakowaniu:
+### 3. Nadaj uprawnienia wykonywalne:
 
-🧑‍🔧 Przenieś zawartość folderu `usr`:
-```bash
-mv proxmox-auto-update/usr/ /usr/
-```
-
-🧑‍🔧 Przenieś zawartość folderu `etc`:
-
-```bash
-mv proxmox-auto-update/etc/ /etc/
-```
-
-🔒 Uprawnienia:
 ```bash
 chmod +x /usr/local/bin/proxmox-auto-update.sh
 ```
 
-### 4. Załaduj konfigurację systemd:
+### 4. Przeładuj konfigurację systemd:
+
 ```bash
 systemctl daemon-reload
 ```
-> ⬆️ Przeładowuje konfigurację jednostek systemd (🔧 usługi, ⏲️ timery, 🧩 itd.).
 
-### 5. Włącz timer:
-⏲️ Aby uruchomić timer od razu i aktywować go na stałe:
+> 🔄 Przeładowuje konfigurację jednostek systemd (🔧 usługi, ⏲️ timery, 🧩 itd.).
+
+### 5. Aktywuj timer:
+
+⏲️ Natychmiastowe uruchomienie i aktywacja na stałe:
+
 ```bash
 systemctl enable --now proxmox-auto-update.timer
 ```
 
-⏲️ Aby tylko aktywować timer ( 🚨 uruchomi się przy następnym reboot):
+⏲️ Tylko aktywacja ( 🚨 uruchomi się przy następnym uruchomieniu systemu):
+
 ```bash
 systemctl enable proxmox-auto-update.timer
 ```
 
-⏲️ Aby uruchomić timer tylko raz ( 🚨 do kolejnego rebootu):
+⏲️ Jednorazowe uruchomienie:
+
 ```bash
 systemctl start proxmox-auto-update.timer
 ```
 
-### 6. Sprawdź status timera:
+### 6. Sprawdzenie działania timera:
+
 ```bash
 systemctl status proxmox-auto-update.timer
 ```
-### 7. Sprawdź czy timer jest dodany:
 
-⏲️ Komenda ta wyświetli wszystkie aktywne timery w systemie, w tym twój timer `proxmox-auto-update.timer`.:
+### 7. Lista aktywnych timerów:
+
 ```bash
 systemctl list-timers --all
 ```
 
-### 8. Skonfiguruj `msmtp` do wysyłki e-maili:
+---
+
+## 📨 Konfiguracja klienta `msmtp` (wysyłka e-maili)
+
+### Instalacja:
+
 ```bash
 apt install msmtp msmtp-mta -y
 ```
 
-#### 📄 Plik konfiguracyjny:
-- `~/.msmtprc` (dla użytkownika)
-- `/etc/msmtprc` (globalnie)
->💡 szablon pliku konfiguracyjnego znajduje się w paczce.
+### 📄 Plik konfiguracyjny:
 
-#### 🔒 Uprawnienia:
+* Użytkownik: `~/.msmtprc`
+* Globalnie: `/etc/msmtprc`
+
+> 💡 Szablon pliku konfiguracyjnego znajduje się w paczce instalacyjnej.
+
+### 🔒 Ustawienia uprawnień:
+
 ```bash
 chmod 600 ~/.msmtprc
 ```
 
-#### 🧪 Test wysyłki:
+### 🧪 Test działania:
+
 ```bash
 echo "To: twoj_email@gmail.com" | msmtp --debug --from=default -t
 ```
 
-#### 📌 * Opcjonalnie * 🔐 Zabezpieczenie hasła:
-🛡️ Zaszyfruj hasło GPG:
+---
+
+## 📌 (Opcjonalnie) 🔐 Zabezpieczenie hasła za pomocą GPG
+
+### 1. Wygeneruj klucz (jeśli jeszcze go nie masz):
+
 ```bash
-echo "twoje_haslo" | gpg --encrypt --recipient email@email.com > ~/.msmtp-password.gpg
+gpg --full-generate-key
 ```
 
-🧑‍🔧 W pliku `.msmtprc` dodaj:
+### 2. Sprawdź dostępne klucze:
+
+```bash
+gpg --list-keys
+```
+
+### 3. Zaszyfruj hasło:
+
+```bash
+echo "twoje_haslo" | gpg --encrypt --recipient twoj_email@email.com > ~/.msmtp-password.gpg
+```
+
+### 4. Skonfiguruj `.msmtprc`:
+
 ```bash
 passwordeval "gpg --quiet --for-your-eyes-only --no-tty --decrypt ~/.msmtp-password.gpg"
 ```
 
-🔒 Uprawnienia:
+### 5. Zabezpiecz plik z hasłem:
+
 ```bash
 chmod 600 ~/.msmtp-password.gpg
 ```
 
 ---
-### 💡
-📂 **Logi znajdziesz w:** `/var/log/proxmox-auto-update.log`
+
+## 📁 Dodatkowe informacje
+
+* 🔍 Logi działania skryptu: `/var/log/proxmox-auto-update.log`
+* 🛠️ Diagnostyka `msmtp`: `~/.msmtp.log` lub `journalctl -xe`
