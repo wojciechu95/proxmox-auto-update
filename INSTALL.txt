@@ -38,7 +38,12 @@
 
    systemctl status proxmox-auto-update.timer
 
-7. Skonfiguruj 'msmtp' aby działało wysyłanie maili.
+7. Sprawdź czy timer jest dodany:
+
+   ▸ Komenda ta wyświetli wszystkie aktywne timery w systemie, w tym twój timer `proxmox-auto-update.timer`.:
+   systemctl list-timers --all
+
+8. Skonfiguruj 'msmtp' aby działało wysyłanie maili.
 
    ▸ Plik konfiguracyjny: ~/.msmtprc (lub globalnie: /etc/msmtprc)
 

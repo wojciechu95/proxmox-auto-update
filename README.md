@@ -47,7 +47,7 @@ systemctl start proxmox-auto-update.timer
 ```bash
 systemctl status proxmox-auto-update.timer
 ```
-### 7. Skonfiguruj `msmtp` do wysyłki e-maili:
+### 7. Sprawdź czy timer jest dodany:
 
 Komenda ta wyświetli wszystkie aktywne timery w systemie, w tym twój timer `proxmox-auto-update.timer`.:
 ```bash
