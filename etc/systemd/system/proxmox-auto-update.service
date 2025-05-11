@@ -1,0 +1,11 @@
+[Unit]
+Description=Proxmox Automatic System Update and Reboot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/proxmox-auto-update.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,66 @@
+
+# ===========================
+# Proxmox Auto-Update Script
+# Version: 1.4.0-intelligent
+# Author: Wojciech Piwowarski
+# ===========================
+
+📦 Instrukcja instalacji Proxmox Auto-Update (v1.4.0-intelligent):
+
+1. Rozpakuj paczkę:
+   tar -xvzf proxmox-auto-update.tar.gz -C /
+
+2. Edytuj plik `/usr/local/bin/proxmox-auto-update.sh` i ustaw swój adres e-mail:
+
+   EMAIL="twoj_adres@email.com"
+
+3. Ustaw uprawnienia do pliku wykonywalnego:
+
+   chmod +x /usr/local/bin/proxmox-auto-update.sh
+
+4. Załaduj konfigurację systemd:
+
+   systemctl daemon-reload
+   ▸ Powoduje przeładowanie konfiguracji jednostek systemd (usług, timerów itd.), aby uwzględnić dodane lub zmodyfikowane pliki.*
+
+5. Włącz timer:
+
+   ▸ Aby uruchomić timer natychmiast i aktywować go na stałe:
+   systemctl enable --now proxmox-auto-update.timer
+
+   ▸ Aby tylko aktywować timer (bez uruchamiania teraz, wystartuje przy następnym reboot):
+   systemctl enable proxmox-auto-update.timer
+
+   ▸ Aby uruchomić timer tylko raz (do kolejnego rebootu):
+   systemctl start proxmox-auto-update.timer
+
+6. Sprawdź, czy timer działa poprawnie:
+
+   systemctl status proxmox-auto-update.timer
+
+7. Skonfiguruj 'msmtp' aby działało wysyłanie maili.
+
+   ▸ Plik konfiguracyjny: ~/.msmtprc (lub globalnie: /etc/msmtprc)
+
+   ▸ Upewnij się, że msmtp jest zainstalowane:
+   apt install msmtp msmtp-mta -y
+
+   ▸ Uprawnienia do plików:
+   chmod 600 ~/.msmtprc
+
+   🧪 Test wysyłki:
+   echo "To: twoj_email@gmail.com" | msmtp --debug --from=default -t
+
+
+  🔐 *Opcjonalnie: zabezpieczenie hasła GPG*
+
+   ▸ Zaszyfruj hasło:
+   echo "twoje_haslo" | gpg --encrypt --recipient email@email.com > ~/.msmtp-password.gpg
+
+   ▸ Ustaw `msmtprc`, aby korzystał z GPG:
+   passwordeval "gpg --quiet --for-your-eyes-only --no-tty --decrypt ~/.msmtp-password.gpg"
+
+   ▸ Ustaw odpowiednie uprawnienia:
+   chmod 600 ~/.msmtp-password.gpg
+
+📂 Logi znajdziesz w: /var/log/proxmox-auto-update.log

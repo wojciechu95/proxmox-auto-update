@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Proxmox Auto-Update daily at 04:00 or after reboot if missed
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
