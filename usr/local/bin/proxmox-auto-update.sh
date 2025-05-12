@@ -3,11 +3,11 @@ set -euo pipefail
 
 # ===========================
 # Proxmox Auto-Update Script
-# Version: 1.4.0-intelligent
+# Version: 1.5.0-intelligent
 # Wojciech Piwowarski
 # ===========================
 
-VERSION="1.4.0"
+VERSION="1.5.0"
 LOGFILE="/var/log/proxmox-auto-update.log"
 
 #Adresat Wiadomości loga
@@ -17,6 +17,7 @@ EMAIL="wojtek.piwowarski1@gmail.com"
 > "$LOGFILE"
 
 SUBJECT="Proxmox Auto-Update - $(date '+%Y-%m-%d %H:%M:%S') - log (v$VERSION)"
+HOSTNAME=$(hostname)
 KERNEL_BEFORE=$(uname -r)
 KERNEL_AFTER=$(ls -1 /boot/vmlinuz-* 2>/dev/null | sed 's|.*/vmlinuz-||' | sort -V | tail -n 1)
 REBOOT_NEEDED=0
@@ -25,6 +26,7 @@ HIGH_USAGE_VM=0
 send_email() {
     if command -v msmtp >/dev/null 2>&1; then
        {
+        echo "From: PROXMOX-$HOSTNAME<$EMAIL>"
         echo "To: $EMAIL"
         echo "Subject: $SUBJECT"
         echo ""
@@ -60,6 +62,7 @@ trap 'handle_error $LINENO $?' ERR
 
      if [ -f /var/run/reboot-required ]; then
         echo "📎 System zgłasza potrzebę restartu ⚠️"
+        echo
         if [[ "$KERNEL_BEFORE" != "$KERNEL_AFTER" ]]; then
            echo
            echo "🟡 Kernel został zaktualizowany – ⚠️ nastąpi restart."
